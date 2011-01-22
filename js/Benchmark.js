@@ -4,6 +4,8 @@
 var Benchmark = new function() {
 	
 	var BenchmarkLocale = {
+		FRACTIONAL_INSERT_ERR : 	"Benchmark: Insert milliseconds, not seconds.",
+		INSERT_WHILE_RUNNING_ERR : 	"Benchmark: Should not use insert while running.",
 		RUN_WHILE_RUNNING_ERR : 	"Benchmark: test already running.",
 		END_WITHOUT_RUNNING_ERR: 	"Benchmark: Cannot end test when not running.",
 		NO_TEST_WITH_ID: 			 	"Benchmark: Trying to access non existing test."
@@ -31,6 +33,13 @@ var Benchmark = new function() {
 			basis++;
 			currentTime = null;
 		}
+		
+		this.insertResult = function(value) {
+			if (value < 1 && value > 0) throw new Error(BenchmarkLocale.FRACTIONAL_INSERT_ERR);			
+			if (currentTime) throw new Error(BenchmarkLocale.INSERT_WHILE_RUNNING_ERR);			
+			sum += value;
+			basis++;
+		}		
 		
 		this.isRunning = function() {
 			return currentTime == null
@@ -82,6 +91,9 @@ var Benchmark = new function() {
 	this.end = function(id) {
 		getById(id).end()
 	}
+	this.insert = function(id,value) {
+		getById(id).insertResult(value)
+	}	
 	
 	this.reset = function(id) {
 		getById(id).reset()

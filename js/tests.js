@@ -3,13 +3,22 @@ var BM = Benchmark;
 var ITERATIONS = 1000000;
 
 var entireSuite = BM.create("Entire testsuite");
+var insertValueTest = BM.create("inserted test-values");
 
 BM.run(entireSuite)
 
+BM.doOnce("Iterated insert values",function() {
+  var i = ITERATIONS;
+  while(i--) {
+    BM.insert(insertValueTest,i);
+  }
+});
+
+
 BM.doOnce("Descending for loop",function() {
-	var i = ITERATIONS;
-	while(i--) {
-	}
+  var i = ITERATIONS;
+  while(i--) {
+  }
 });
 
 BM.doOnce("Descending while loop",function() {
